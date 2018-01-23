@@ -176,6 +176,7 @@ namespace RazvSF
                     catch (Exception)
                     {
                         WorkDescription += "  - что-то пошло не так :(\n";
+                        activeWorkBook.Close(SaveChanges: false);
                         continue;    // пропускаем файл, который не получилось обработать
                     }
 
@@ -192,12 +193,12 @@ namespace RazvSF
                 }
             }
             logWriter?.Dispose();
-            CollectGarbage();
+            excel?.Quit();
         }
 
         private void CollectGarbage()
         {
-            excel = null;
+            excel?.Quit();
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
