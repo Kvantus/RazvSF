@@ -188,9 +188,18 @@ namespace RazvSF
                     excel.ScreenUpdating = true;
                     WorkDescription += "  - что-то пошло не так :(\n";
                     logWriter.WriteLine($" -- ошибка: {ex.Message}");
+                    CollectGarbage();
                 }
             }
-            logWriter.Dispose();
+            logWriter?.Dispose();
+            CollectGarbage();
+        }
+
+        private void CollectGarbage()
+        {
+            excel = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         public Range FindCell(string poisk, Range range)
