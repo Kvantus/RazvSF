@@ -292,10 +292,10 @@ namespace RazvSF
         /// <returns></returns>
         public Range ArticleCheck(Range TopRowRangeOfUPD) // нужно изменить аргумент. передаем параметр kol.Row - то что в начале находим
         {
-            Range allCells = sheet.Cells;
+            Range findRange = sheet.Range[sheet.Cells[1,1], sheet.Cells[TopRowRangeOfUPD.Row, 1000]];
             string article = "артикул";
 
-            Range itog = allCells.Find(What: article, LookIn: XlFindLookIn.xlValues, LookAt: XlLookAt.xlPart,
+            Range itog = findRange.Find(What: article, LookIn: XlFindLookIn.xlValues, LookAt: XlLookAt.xlPart,
                 SearchOrder: XlSearchOrder.xlByRows, SearchDirection: XlSearchDirection.xlNext, MatchCase: false, SearchFormat: false);
             if (itog != null)
             {
