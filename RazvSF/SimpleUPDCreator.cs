@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Interop.Excel;
 using System.IO;
+using System.Reflection;
 
 namespace RazvSF
 {
@@ -106,7 +107,7 @@ namespace RazvSF
             catch (Exception ex)
             {
                 excel.ScreenUpdating = true;
-                MessageBox.Show("Ошибка! :(\n" + ex.Message);
+                MessageBox.Show("Ошибка! :(\n" + ex.Message + "\nВнутреннее Исключение: " + ex?.InnerException?.Message);
                 return;
             }
             finally
@@ -292,7 +293,16 @@ namespace RazvSF
         /// <returns></returns>
         public Range ArticleCheck(Range TopRowRangeOfUPD) // нужно изменить аргумент. передаем параметр kol.Row - то что в начале находим
         {
-            Range findRange = sheet.Range[sheet.Cells[1,1], sheet.Cells[TopRowRangeOfUPD.Row, 1000]];
+            Range findRange;
+            try
+            {
+                findRange = sheet.Range[sheet.Cells[1, 1], sheet.Cells[TopRowRangeOfUPD.Row, 200]];
+            }
+            catch (Exception ex)
+            {
+                string method = MethodBase.GetCurrentMethod().Name;
+                throw new FormatException("Метод " + method + "\n" + ex.Message);
+            }
             string article = "артикул";
 
             Range itog = findRange.Find(What: article, LookIn: XlFindLookIn.xlValues, LookAt: XlLookAt.xlPart,
@@ -474,7 +484,7 @@ namespace RazvSF
             }
             else
             {
-                articleTopCell = ArticleCheck(countTopCell.EntireRow);
+                    articleTopCell = ArticleCheck(countTopCell.EntireRow);
             }
 
             try
