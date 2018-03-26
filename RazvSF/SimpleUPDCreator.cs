@@ -73,6 +73,7 @@ namespace RazvSF
 
         public void TransformUPD(bool bezB, bool NeedCopy, bool NeedSave)
         {
+            // присоединение к текушему процессу Excel. Если он не запущен - выброс исключения
             excel = System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application")
                 as Excel.Application;
             _ = excel ?? throw new NullReferenceException(nameof(excel) + ": имеет значение null. Процесс Excel не найден");
@@ -81,9 +82,10 @@ namespace RazvSF
             Workbook activeWorkBook = excel.ActiveWorkbook;
             sheet = activeWorkBook.ActiveSheet;
 
+            // убираем все контролы с текущего листа, если они есть
             RemoveImages();
 
-            if (NeedSave)
+            if (NeedSave) // проверка, нужно ли сохранить сф на диске после обработки
             {
                 tempBook = excel.Workbooks.Add(); // создаем временную книгу, информацию из которой в последствии сохраним в txt файл
                 Worksheet tempSheet = tempBook.ActiveSheet; // временная переменная, чтобы скопировать содержимое в новую книгу
@@ -91,7 +93,7 @@ namespace RazvSF
                 sheet = tempSheet;
             }
 
-            if (NeedCopy)
+            if (NeedCopy) // проверка, нужно ли сохранить текущую СФ ДО обработки на лист "СЮДА" в файле с макросами
             {
                 CopySuda();
             }
@@ -102,7 +104,7 @@ namespace RazvSF
 
             try
             {
-                RunTransformation(false);
+                RunTransformation(false); // основной метод обработки сф
             }
             catch (Exception ex)
             {
@@ -111,11 +113,11 @@ namespace RazvSF
                 return;
             }
             finally
-            {
+            { // на всякий случай, не зависимо от итогов, включаем в Excel обновление экрана, для предотвращения зависания
                 excel.ScreenUpdating = true;
             }
 
-            if (NeedSave)
+            if (NeedSave) // еще раз проверяем, нужно ли сохранить книгу на диск
             {
                 try
                 {
@@ -128,6 +130,10 @@ namespace RazvSF
             }
         }
 
+        /// <summary>
+        /// Массовая обработка СФ в указанной папке
+        /// </summary>
+        /// <param name="workingFolder">Папка с файлами СФ для обработки</param>
         public void MassTransformUPD(string workingFolder)
         {
             LogWriter logWriter = new LogWriter(workingFolder + "\\UPDLogs.txt");
@@ -190,20 +196,33 @@ namespace RazvSF
                     excel.ScreenUpdating = true;
                     WorkDescription += "  - что-то пошло не так :(\n";
                     logWriter.WriteLine($" -- ошибка: {ex.Message}");
-                    CollectGarbage();
+                }
+                finally
+                {
+                    logWriter?.Dispose();
+                    excel?.Quit();
                 }
             }
             logWriter?.Dispose();
             excel?.Quit();
         }
 
-        private void CollectGarbage()
-        {
-            excel?.Quit();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //private void CollectGarbage()
+        //{
+        //    excel?.Quit();
+        //    GC.Collect();
+        //    GC.WaitForPendingFinalizers();
+        //}
 
+        /// <summary>
+        /// Поиск ячейки по ее текстовому значению в указанном диапазоне ячеек
+        /// </summary>
+        /// <param name="poisk">Значение для поиска</param>
+        /// <param name="range">Диапазон ячеек для поиска</param>
+        /// <returns></returns>
         public Range FindCell(string poisk, Range range)
         {
             Range itog = range.Find(What: poisk, LookIn: XlFindLookIn.xlValues, LookAt: XlLookAt.xlPart,
@@ -233,6 +252,11 @@ namespace RazvSF
             }
         }
 
+        /// <summary>
+        /// Удаление строк, содержащих специальные ячейки в указанной колонке
+        /// </summary>
+        /// <param name="column">Колонка в которой необходимо удалить строки</param>
+        /// <param name="cellTypes">Тим специальной ячейки для поиска и удаления</param>
         public void DeleteSpecialCells(int column, CellTypes cellTypes)
         {
             Range range = sheet.Cells[1, column];

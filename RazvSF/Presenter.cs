@@ -14,12 +14,17 @@ namespace RazvSF
         ISimpleUPDCreator simpleUpdCreator;
         Configuration config;
 
-
+        /// <summary>
+        /// Инициализация класса, в качества параметров выступает интерфейс Windows формы и интерфейс обработчика сф
+        /// </summary>
+        /// <param name="mainForm"></param>
+        /// <param name="simpleUpdCreator"></param>
         public Presenter(IMainForm mainForm, ISimpleUPDCreator simpleUpdCreator)
         {
             this.mainForm = mainForm ?? throw new ArgumentNullException(nameof(mainForm));
             this.simpleUpdCreator = simpleUpdCreator ?? throw new ArgumentNullException(nameof(simpleUpdCreator));
 
+            // подписка на события формы
             mainForm.TransformButtonClick += Transform;
             mainForm.TransformAndSaveButtonClick += TransformAndSave;
             mainForm.BezBTransformButtonClick += TransformBezB;
@@ -27,11 +32,13 @@ namespace RazvSF
             mainForm.FixButtonClick += MakeFix;
             mainForm.MassTransformButtonClick += MassTransform;
 
+            // папка, выбранная пользователем в прошлый раз, сохраненная в файле конфига. Достаем ее и отображаем на форме
             config = ConfigurationManager.OpenExeConfiguration(AppDomain.CurrentDomain.FriendlyName);
 
             mainForm.WorkingFolderText = config.AppSettings.Settings["WorkingFolder"].Value;
             mainForm.WorkingFolderPathChanged += ChangePath;
 
+            // подписка на события обработчика СФ - изменение описания работы обработчика (т.е. добавление новых строчек)
             simpleUpdCreator.WorkDescriptionChanged += WorkDescriptionChange; 
         }
 
@@ -57,22 +64,40 @@ namespace RazvSF
             mainForm.StatusText = "Ожидание";
         }
 
+        /// <summary>
+        /// Обработчик события изменения описания работы обработчика СФ. При добавлении в поле описания новых строчек,
+        /// они добавляются в соответствующий текстбокс на форме
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         void WorkDescriptionChange(object sender, WorkDescriptionEventArgs args)
         {
             mainForm.RichBoxText = args.WorkDescription;
         }
 
+        /// <summary>
+        /// Обработчик нажатия экстренной кнопки. Если произошло аварийное завершения процесса посреди выполнения основного метода
+        /// обработки и Excel завис в состоянии, где он НЕ обновляет визуальные изменения, то данная кнопка включает обновление заново.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         void MakeFix(object sender, EventArgs args)
         {
             simpleUpdCreator.FixExcel();
         }
 
+        // При изменении пользователем текущей рабочей папки, данный обработчик события записывает новое значение пути в конфиг файл
         void ChangePath(object sender, EventArgs args)
         {
             config.AppSettings.Settings["WorkingFolder"].Value = mainForm.WorkingFolderText;
             config.Save();
         }
 
+        /// <summary>
+        /// Метод обработчик нажатия кнопки стандартной обработки одной СФ.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         void Transform(object sender, EventArgs args)
         {
             mainForm.StatusText = "ВЫПОЛНЕНИЕ!";
@@ -87,6 +112,11 @@ namespace RazvSF
             mainForm.StatusText = "Ожидание";
         }
 
+        /// <summary>
+        /// Метод обработчик нажатия кнопки обработки И СОХРАНЕНИЯ одной СФ.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         void TransformAndSave(object sender, EventArgs args)
         {
             mainForm.StatusText = "ВЫПОЛНЕНИЕ!";
@@ -101,6 +131,11 @@ namespace RazvSF
             mainForm.StatusText = "Ожидание";
         }
 
+        /// <summary>
+        /// Метот обработчик нажатия кнопки нестандартной обработки СФ, где необходимо игнорировать колонку с названием "Б"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         void TransformBezB(object sender, EventArgs args)
         {
             mainForm.StatusText = "ВЫПОЛНЕНИЕ!";
@@ -115,6 +150,12 @@ namespace RazvSF
             mainForm.StatusText = "Ожидание";
         }
 
+        /// <summary>
+        /// Метот обработчик нажатия кнопки нестандартной обработки СФ И ЕЕ СОХРАНЕНИЯ, 
+        /// где необходимо игнорировать колонку с названием "Б"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         void TransformAndSaveBezB(object sender, EventArgs args)
         {
             mainForm.StatusText = "ВЫПОЛНЕНИЕ!";
