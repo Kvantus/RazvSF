@@ -14,7 +14,7 @@ namespace RazvSF
         [STAThread]
         static void Main()
         {
-            DateTime myDate = new DateTime(2018, 10, 1);
+            DateTime myDate = new DateTime(2019, 4, 6);
             if (DateTime.Now > myDate)
             {
                 return;
