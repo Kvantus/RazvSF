@@ -47,6 +47,16 @@ namespace RazvSF
         /// Событие возникает при массовой обработке счетов-фактур, когда обновляется строковое поле WorkDescription, накапливающее в себе информацию о процессе работы
         /// </summary>
         event EventHandler<WorkDescriptionEventArgs> WorkDescriptionChanged;
+
+        /// <summary>
+        /// Файл, в который будет предварительно скопирована счет-фактура
+        /// </summary>
+        string FileToCopy { get; set; }
+
+        /// <summary>
+        /// Лист в файле, в который будет предварительно скопирована счет-фактура
+        /// </summary>
+        string SheetToCopy { get; set; }
     }
 
 
@@ -62,6 +72,9 @@ namespace RazvSF
             get => workDescription;
             set { workDescription = value; OnWorkDescriptionChange(); }
         }
+
+        public string FileToCopy { get; set; }
+        public string SheetToCopy { get; set; }
 
         public event EventHandler<WorkDescriptionEventArgs> WorkDescriptionChanged;
 
@@ -373,13 +386,14 @@ namespace RazvSF
         {
             try
             {
-                Workbook macroBook = excel.Workbooks["Макросы.xlsm"]; // возможно стоит передавать лист КУДА вставлять также параметром
-                Worksheet macroSheet = macroBook.Sheets["СЮДА"];
+                Workbook macroBook = excel.Workbooks[FileToCopy]; // возможно стоит передавать лист КУДА вставлять также параметром
+                Worksheet macroSheet = macroBook.Sheets[SheetToCopy];
                 sheet.Cells.Copy(macroSheet.Range["A1"]);
             }
             catch (Exception ex)
             {
-                throw new ArgumentOutOfRangeException("Файл Макросы не найден, " + ex.Message);
+                throw new ArgumentOutOfRangeException(
+                    $"Не найден файл \"{FileToCopy}\" c листом \"{SheetToCopy}\"\n" + ex.Message);
             }
         }
 

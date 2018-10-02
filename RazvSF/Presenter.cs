@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Windows.Forms;
+using RazvSF.Properties;
 
 namespace RazvSF
 {
@@ -31,6 +32,7 @@ namespace RazvSF
             mainForm.BezBTransformAndSaveButtonClick += TransformAndSaveBezB;
             mainForm.FixButtonClick += MakeFix;
             mainForm.MassTransformButtonClick += MassTransform;
+            mainForm.BeforeClosing += BeforeProgramClosed;
 
             // папка, выбранная пользователем в прошлый раз, сохраненная в файле конфига. Достаем ее и отображаем на форме
             config = ConfigurationManager.OpenExeConfiguration(AppDomain.CurrentDomain.FriendlyName);
@@ -38,8 +40,18 @@ namespace RazvSF
             mainForm.WorkingFolderText = config.AppSettings.Settings["WorkingFolder"].Value;
             mainForm.WorkingFolderPathChanged += ChangePath;
 
+            mainForm.FileToCopy = Settings.Default.ExcelFile;
+            mainForm.SheetToCopy = Settings.Default.ExcelSheet;
+
             // подписка на события обработчика СФ - изменение описания работы обработчика (т.е. добавление новых строчек)
-            simpleUpdCreator.WorkDescriptionChanged += WorkDescriptionChange; 
+            simpleUpdCreator.WorkDescriptionChanged += WorkDescriptionChange;
+        }
+
+        private void BeforeProgramClosed(object sender, EventArgs e)
+        {
+            Settings.Default.ExcelFile = mainForm.FileToCopy;
+            Settings.Default.ExcelSheet = mainForm.SheetToCopy;
+            Settings.Default.Save();
         }
 
         void MassTransform(object sender, EventArgs args)
@@ -93,6 +105,12 @@ namespace RazvSF
             config.Save();
         }
 
+        private void DefineFileToCopy()
+        {
+            simpleUpdCreator.FileToCopy = mainForm.FileToCopy;
+            simpleUpdCreator.SheetToCopy = mainForm.SheetToCopy;
+        }
+
         /// <summary>
         /// Метод обработчик нажатия кнопки стандартной обработки одной СФ.
         /// </summary>
@@ -100,6 +118,8 @@ namespace RazvSF
         /// <param name="args"></param>
         void Transform(object sender, EventArgs args)
         {
+            DefineFileToCopy();
+
             mainForm.StatusText = "ВЫПОЛНЕНИЕ!";
             try
             {
@@ -119,6 +139,8 @@ namespace RazvSF
         /// <param name="args"></param>
         void TransformAndSave(object sender, EventArgs args)
         {
+            DefineFileToCopy();
+
             mainForm.StatusText = "ВЫПОЛНЕНИЕ!";
             try
             {
@@ -138,6 +160,8 @@ namespace RazvSF
         /// <param name="args"></param>
         void TransformBezB(object sender, EventArgs args)
         {
+            DefineFileToCopy();
+
             mainForm.StatusText = "ВЫПОЛНЕНИЕ!";
             try
             {
@@ -158,6 +182,8 @@ namespace RazvSF
         /// <param name="args"></param>
         void TransformAndSaveBezB(object sender, EventArgs args)
         {
+            DefineFileToCopy();
+
             mainForm.StatusText = "ВЫПОЛНЕНИЕ!";
             try
             {

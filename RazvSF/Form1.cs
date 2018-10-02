@@ -33,6 +33,8 @@ namespace RazvSF
         string StatusText { get; set; }
         string WorkingFolderText { get; set; }
         string RichBoxText { get; set; }
+        string FileToCopy { get; set; }
+        string SheetToCopy { get; set; }
     }
 
 
@@ -48,10 +50,22 @@ namespace RazvSF
         public event EventHandler MassTransformButtonClick;
         public event EventHandler WorkingFolderPathChanged;
 
+        public string FileToCopy
+        {
+            get => txtFile.Text;
+            set => txtFile.Text = value;
+        }
+
+        public string SheetToCopy
+        {
+            get => txtSheet.Text;
+            set => txtSheet.Text = value;
+        }
+
         public string StatusText
         {
-            get { return LStatus.Text; }
-            set { LStatus.Text = value; }
+            get => LStatus.Text;
+            set => LStatus.Text = value;
         }
 
         public string WorkingFolderText
@@ -95,12 +109,12 @@ namespace RazvSF
             BBezBSave.Click += TransformAndSaveBezBButton;
             FixButton.Click += MakeFix;
             BMassBoom.Click += MassBoomClick;
-            BeforeClosing += OnClosing;
+            FormClosing += OnClosing;
         }
 
         private void OnClosing(object sender, EventArgs e)
         {
-            
+            BeforeClosing?.Invoke(this, EventArgs.Empty);
         }
 
         private void MassBoomClick(object sender, EventArgs e)

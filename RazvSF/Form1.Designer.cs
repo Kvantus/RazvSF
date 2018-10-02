@@ -44,6 +44,11 @@
             this.BMassBoom = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtFile = new System.Windows.Forms.TextBox();
+            this.txtSheet = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // Bend
@@ -106,9 +111,9 @@
             // 
             this.BUPDSave.BackColor = System.Drawing.Color.LawnGreen;
             this.BUPDSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.BUPDSave.Location = new System.Drawing.Point(245, 120);
+            this.BUPDSave.Location = new System.Drawing.Point(279, 108);
             this.BUPDSave.Name = "BUPDSave";
-            this.BUPDSave.Size = new System.Drawing.Size(123, 31);
+            this.BUPDSave.Size = new System.Drawing.Size(89, 55);
             this.BUPDSave.TabIndex = 6;
             this.BUPDSave.Text = "Save1";
             this.BUPDSave.UseVisualStyleBackColor = false;
@@ -117,9 +122,9 @@
             // 
             this.BBezBSave.BackColor = System.Drawing.SystemColors.Control;
             this.BBezBSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.BBezBSave.Location = new System.Drawing.Point(245, 191);
+            this.BBezBSave.Location = new System.Drawing.Point(279, 179);
             this.BBezBSave.Name = "BBezBSave";
-            this.BBezBSave.Size = new System.Drawing.Size(123, 31);
+            this.BBezBSave.Size = new System.Drawing.Size(89, 55);
             this.BBezBSave.TabIndex = 7;
             this.BBezBSave.Text = "Save2";
             this.BBezBSave.UseVisualStyleBackColor = false;
@@ -127,9 +132,9 @@
             // FixButton
             // 
             this.FixButton.BackColor = System.Drawing.Color.Yellow;
-            this.FixButton.Location = new System.Drawing.Point(245, 254);
+            this.FixButton.Location = new System.Drawing.Point(279, 254);
             this.FixButton.Name = "FixButton";
-            this.FixButton.Size = new System.Drawing.Size(123, 32);
+            this.FixButton.Size = new System.Drawing.Size(89, 55);
             this.FixButton.TabIndex = 8;
             this.FixButton.Text = "Пофиксить";
             this.FixButton.UseVisualStyleBackColor = false;
@@ -205,11 +210,62 @@
             this.label2.TabIndex = 15;
             this.label2.Text = "Папка:";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(27, 323);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(346, 16);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "Укажи, куда предварительно копировать СФ:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label4.Location = new System.Drawing.Point(27, 351);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(46, 16);
+            this.label4.TabIndex = 17;
+            this.label4.Text = "Файл:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label5.Location = new System.Drawing.Point(27, 381);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(42, 16);
+            this.label5.TabIndex = 18;
+            this.label5.Text = "Лист:";
+            // 
+            // txtFile
+            // 
+            this.txtFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.txtFile.Location = new System.Drawing.Point(80, 351);
+            this.txtFile.Name = "txtFile";
+            this.txtFile.Size = new System.Drawing.Size(220, 22);
+            this.txtFile.TabIndex = 19;
+            // 
+            // txtSheet
+            // 
+            this.txtSheet.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.txtSheet.Location = new System.Drawing.Point(80, 375);
+            this.txtSheet.Name = "txtSheet";
+            this.txtSheet.Size = new System.Drawing.Size(220, 22);
+            this.txtSheet.TabIndex = 20;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1098, 485);
+            this.Controls.Add(this.txtSheet);
+            this.Controls.Add(this.txtFile);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.BMassBoom);
@@ -249,6 +305,11 @@
         private System.Windows.Forms.Button BMassBoom;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtFile;
+        private System.Windows.Forms.TextBox txtSheet;
     }
 }
 
