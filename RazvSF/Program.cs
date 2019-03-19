@@ -14,11 +14,11 @@ namespace RazvSF
         [STAThread]
         static void Main()
         {
-            DateTime myDate = new DateTime(2019, 4, 6);
-            if (DateTime.Now > myDate)
-            {
-                return;
-            }
+            //DateTime myDate = new DateTime(2019, 4, 6);
+            //if (DateTime.Now > myDate)
+            //{
+            //    return;
+            //}
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
